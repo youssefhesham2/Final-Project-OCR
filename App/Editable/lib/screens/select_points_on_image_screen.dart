@@ -11,8 +11,8 @@ class SelectPointsOnImageScreen extends StatefulWidget {
   const SelectPointsOnImageScreen(
     this.imageFile,
     this.points, {
-    @required this.imgWidth,
-    @required this.imgHeight,
+    required this.imgWidth,
+    required this.imgHeight,
   });
 
   @override
@@ -24,8 +24,8 @@ class _SelectPointsOnImageScreenState extends State<SelectPointsOnImageScreen> {
   static const PADDING = 30.0;
   static const PT_RADIUS = 8.0;
   final _stackKey = GlobalKey();
-  double _imgWidthOnScreen, _imgHeightOnScreen;
-  double _scale;
+  late double _imgWidthOnScreen, _imgHeightOnScreen;
+  late double _scale;
   bool _initDone = false;
   int _currentlyDraggedIndex = -1;
   List<Point<double>> _modifiedPoints = [];
@@ -50,14 +50,15 @@ class _SelectPointsOnImageScreenState extends State<SelectPointsOnImageScreen> {
       top: pt.y * _scale - PT_RADIUS,
       child: CircleAvatar(
         radius: PT_RADIUS,
-        backgroundColor: Theme.of(context).accentColor.withOpacity(0.7),
+        backgroundColor:
+            Theme.of(context).colorScheme.secondary.withOpacity(0.7),
       ),
     );
   }
 
   Point<double> _translatePoint(double x, double y) {
-    final newX = (x - _stackKey.globalPaintBounds.left) / _scale;
-    final newY = (y - _stackKey.globalPaintBounds.top) / _scale;
+    final newX = (x - _stackKey.globalPaintBounds!.left) / _scale;
+    final newY = (y - _stackKey.globalPaintBounds!.top) / _scale;
     return Point(newX, newY);
   }
 
@@ -85,15 +86,15 @@ class _SelectPointsOnImageScreenState extends State<SelectPointsOnImageScreen> {
             children: [
               Center(
                 child: Stack(
+                  clipBehavior: Clip.none,
                   key: _stackKey,
-                  overflow: Overflow.visible,
                   children: [
                     Image.file(widget.imageFile),
                     for (int i = 0; i < _modifiedPoints.length; i++)
                       _buildPositionedPoint(i),
                     CustomPaint(
-                      painter:
-                          LinesPainter(_offsets, Theme.of(context).accentColor),
+                      painter: LinesPainter(
+                          _offsets, Theme.of(context).colorScheme.secondary),
                     ),
                   ],
                 ),
@@ -101,13 +102,13 @@ class _SelectPointsOnImageScreenState extends State<SelectPointsOnImageScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  FlatButton(
+                  TextButton(
                     child: Text('Cancel'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
-                  FlatButton(
+                  TextButton(
                     child: Text('Reset'),
                     onPressed: () {
                       setState(() {
@@ -115,7 +116,7 @@ class _SelectPointsOnImageScreenState extends State<SelectPointsOnImageScreen> {
                       });
                     },
                   ),
-                  FlatButton(
+                  TextButton(
                     child: Text('Confirm'),
                     onPressed: () {
                       Navigator.of(context).pop(_modifiedPoints);
@@ -171,11 +172,11 @@ class _SelectPointsOnImageScreenState extends State<SelectPointsOnImageScreen> {
 }
 
 extension GlobalKeyExtension on GlobalKey {
-  Rect get globalPaintBounds {
+  Rect? get globalPaintBounds {
     final renderObject = currentContext?.findRenderObject();
     var translation = renderObject?.getTransformTo(null)?.getTranslation();
-    if (translation != null && renderObject.paintBounds != null) {
-      return renderObject.paintBounds
+    if (translation != null && renderObject?.paintBounds != null) {
+      return renderObject!.paintBounds
           .shift(Offset(translation.x, translation.y));
     } else {
       return null;

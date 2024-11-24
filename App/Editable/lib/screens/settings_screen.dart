@@ -19,7 +19,10 @@ class SettingsScreen extends StatelessWidget {
       subtitle: Text(
         description,
       ),
-      onChanged: updateValue,
+      onChanged: (bool newValue) {
+        updateValue(
+            newValue); // Ensure the callback matches the expected signature
+      },
     );
   }
 
@@ -36,7 +39,7 @@ class SettingsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: Text(
               'Adjust your app settings',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           Consumer<Settings>(
@@ -46,7 +49,7 @@ class SettingsScreen extends StatelessWidget {
                   _buildSwitchListTile(
                     'Selecting Page Points',
                     'Let me select and correct the points defining the region-of-interest of the image',
-                    settings.allowSelectPoints,
+                    settings.allowSelectPoints == true,
                     (newValue) {
                       settings.toggleAllowSelectPoints();
                     },
@@ -54,7 +57,7 @@ class SettingsScreen extends StatelessWidget {
                   _buildSwitchListTile(
                     'Dark Theme',
                     'Change the application theme',
-                    settings.darkTheme,
+                    settings.darkTheme == true,
                     (newValue) {
                       settings.toggleDarkTheme();
                     },
@@ -67,13 +70,15 @@ class SettingsScreen extends StatelessWidget {
                         children: [
                           const Text('Change font size:'),
                           Slider(
-                            value: settings.fontSizeFactor,
+                            value: settings.fontSizeFactor ?? 0,
                             min: 1,
                             max: 1.4,
                             divisions: 5,
                             label: null,
-                            activeColor:
-                                Theme.of(context).accentColor.withOpacity(0.8),
+                            activeColor: Theme.of(context)
+                                .colorScheme
+                                .secondary
+                                .withOpacity(0.8),
                             onChanged: (value) {
                               settings.setFontSize(value);
                             },

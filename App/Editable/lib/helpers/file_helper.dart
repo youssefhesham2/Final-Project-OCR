@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:external_path/external_path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:ext_storage/ext_storage.dart';
 
 class FileHelper {
   static Future<String> get _localPath async {
     if (Platform.isAndroid) {
-      return ExtStorage.getExternalStoragePublicDirectory(
-          ExtStorage.DIRECTORY_DOWNLOADS);
+      return ExternalPath.getExternalStoragePublicDirectory(
+          ExternalPath.DIRECTORY_DOWNLOADS);
     }
     // Platform is iOS
     final dir = await getApplicationDocumentsDirectory();

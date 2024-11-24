@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:open_file/open_file.dart';
-import 'package:share/share.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'error_dialog.dart';
@@ -35,8 +35,8 @@ class EditableItem extends StatelessWidget {
 
   void _copyToClipboard(BuildContext context) {
     Clipboard.setData(ClipboardData(text: text)).then((_) {
-      Scaffold.of(context).hideCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Copied to Clipboard'),
           duration: const Duration(seconds: 2),
@@ -50,13 +50,13 @@ class EditableItem extends StatelessWidget {
       final file = await HttpHelper.sendGetDocxFromText(this.text);
       OpenFile.open(file.path);
     } on PermissionDeniedException catch (err) {
-      Scaffold.of(context).hideCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text(
               'We need access to your files in order to download the file!'),
           duration: const Duration(seconds: 4),
-          backgroundColor: Theme.of(context).errorColor,
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     } catch (err) {
@@ -69,7 +69,7 @@ class EditableItem extends StatelessWidget {
     return Dismissible(
       key: ValueKey(id),
       background: Container(
-        color: Theme.of(context).errorColor,
+        color: Theme.of(context).colorScheme.error,
         child: Icon(
           Icons.delete,
           color: Colors.white54,
@@ -92,13 +92,13 @@ class EditableItem extends StatelessWidget {
               'Do you want to remove the item?',
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: const Text('No'),
                 onPressed: () {
                   Navigator.of(ctx).pop(false);
                 },
               ),
-              FlatButton(
+              TextButton(
                 child: const Text('Yes'),
                 onPressed: () {
                   Navigator.of(ctx).pop(true);
@@ -127,7 +127,8 @@ class EditableItem extends StatelessWidget {
                     text,
                     style: TextStyle(
                       fontSize:
-                          Theme.of(context).textTheme.bodyText1.fontSize * 1.3,
+                          Theme.of(context).textTheme.bodyLarge?.fontSize ??
+                              0 * 1.3,
                     ),
                   ),
                 ),

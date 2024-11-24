@@ -12,14 +12,14 @@ class EditEditableScreen extends StatefulWidget {
 
 class _EditEditableScreenState extends State<EditEditableScreen> {
   final _controller = TextEditingController();
-  String _editableId;
+  late String _editableId;
   var _valid = true;
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero).then((_) {
-      _editableId = ModalRoute.of(context).settings.arguments as String;
+      _editableId = ModalRoute.of(context)?.settings.arguments as String;
       _controller.text = Provider.of<Editables>(context, listen: false)
           .getById(_editableId)
           .text;

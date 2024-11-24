@@ -31,7 +31,7 @@ class App extends StatelessWidget {
       child: Consumer<Settings>(
         builder: (ctx, settings, child) => MaterialApp(
           theme: Themes.themeData(
-              ctx, settings.darkTheme, settings.fontSizeFactor),
+              ctx, settings.darkTheme == true, settings.fontSizeFactor!),
           home: HomeScreen(),
           routes: {
             SettingsScreen.routeName: (ctx) => SettingsScreen(),

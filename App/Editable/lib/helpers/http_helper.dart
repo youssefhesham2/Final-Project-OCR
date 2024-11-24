@@ -6,11 +6,12 @@ import 'package:Editable/helpers/file_helper.dart';
 import 'package:http/http.dart' as http;
 
 class HttpHelper {
-  static const baseUrl = '104.248.135.42';
+  static const baseUrl = 'youssef-orc-server-f71c61527916.herokuapp.com';
 
   static Future<String> sendPostImageRequest(String b64Image,
-      [List<Point<double>> points]) async {
+      [List<Point<double>>? points]) async {
     final uri = Uri.http(baseUrl, '/image_to_text');
+    print("sssss $uri");
     try {
       final response = await http.post(uri,
           body: json.encode(
@@ -73,7 +74,7 @@ class HttpHelper {
   static Future<File> sendGetDocxFromText(String text) async {
     final uri = '${Uri.http(baseUrl, '/text_to_docx')}/${_urlify(text)}';
     try {
-      final response = await http.get(uri, headers: {
+      final response = await http.get(uri as Uri, headers: {
         HttpHeaders.hostHeader: baseUrl,
         HttpHeaders.dateHeader: DateTime.now().toIso8601String(),
       });
@@ -106,7 +107,7 @@ class HttpHelper {
   static List<Point<double>> _deserializePoints(List<Map<String, int>> points) {
     List<Point<double>> deserializedPoints = [];
     for (var pt in points) {
-      deserializedPoints.add(Point(pt['x'].toDouble(), pt['y'].toDouble()));
+      deserializedPoints.add(Point(pt['x']!.toDouble(), pt['y']!.toDouble()));
     }
     return deserializedPoints;
   }

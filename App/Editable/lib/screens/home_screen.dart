@@ -10,7 +10,8 @@ class HomeScreen extends StatelessWidget {
   void _navigateToAddItemScreen(BuildContext context) {
     Navigator.of(context).pushNamed(AddEditableScreen.routeName).then((result) {
       if (result != null) {
-        Provider.of<Editables>(context, listen: false).addEditable(result);
+        Provider.of<Editables>(context, listen: false)
+            .addEditable(result as String);
       }
     });
   }
@@ -47,7 +48,7 @@ class HomeScreen extends StatelessWidget {
               builder: (ctx, editablesData, ch) {
                 final editablesReversed = editablesData.items.reversed.toList();
                 return editablesReversed.length == 0
-                    ? ch
+                    ? (ch ?? const SizedBox()) // Provide a fallback widget
                     : ListView.builder(
                         itemBuilder: (ctx, i) {
                           return EditableItem(

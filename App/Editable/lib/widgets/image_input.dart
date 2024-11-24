@@ -14,7 +14,7 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
-  File _image;
+   File? _image;
   final _imagePicker = ImagePicker();
 
   Future<void> _getImage(ImageSource imgSource) async {
@@ -41,7 +41,7 @@ class _ImageInputState extends State<ImageInput> {
           height: 400,
           child: _image != null
               ? Image.file(
-                  _image,
+                  _image!,
                   fit: BoxFit.cover,
                   width: double.infinity,
                 )
@@ -56,12 +56,12 @@ class _ImageInputState extends State<ImageInput> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              FlatButton.icon(
+              TextButton.icon(
                 icon: Icon(Icons.camera_alt),
                 label: Text('Take Picture'),
                 onPressed: () => _getImage(ImageSource.camera),
               ),
-              FlatButton.icon(
+              TextButton.icon(
                 icon: Icon(Icons.image),
                 label: Text('Select From Gallery'),
                 onPressed: () => _getImage(ImageSource.gallery),

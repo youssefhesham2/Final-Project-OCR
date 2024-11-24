@@ -18,9 +18,9 @@ class AddEditableScreen extends StatefulWidget {
 }
 
 class _AddEditableScreenState extends State<AddEditableScreen> {
-  String _base64Image;
-  File _image;
-  int _imageWidth, _imageHeight;
+  String? _base64Image;
+  File? _image;
+  int? _imageWidth, _imageHeight;
   var _isLoading = false;
 
   Future<void> _onImageSelected(File image) async {
@@ -42,23 +42,23 @@ class _AddEditableScreenState extends State<AddEditableScreen> {
         Provider.of<Settings>(context, listen: false).allowSelectPoints;
 
     try {
-      if (!allowSelectPoints) {
-        final result = await HttpHelper.sendPostImageRequest(_base64Image);
+      if (!allowSelectPoints!) {
+        final result = await HttpHelper.sendPostImageRequest(_base64Image!);
         if (!mounted) return;
         setState(() {
           _isLoading = false;
         });
         Navigator.of(context).pop(result);
       } else {
-        final points = await HttpHelper.sendGetPointsRequest(_base64Image);
+        final points = await HttpHelper.sendGetPointsRequest(_base64Image!);
         Navigator.of(context)
             .push(
           MaterialPageRoute(
             builder: (ctx) => SelectPointsOnImageScreen(
-              _image,
+              _image!,
               points,
-              imgWidth: _imageWidth,
-              imgHeight: _imageHeight,
+              imgWidth: _imageWidth!,
+              imgHeight: _imageHeight!,
             ),
           ),
         )
@@ -69,7 +69,7 @@ class _AddEditableScreenState extends State<AddEditableScreen> {
             });
           } else {
             final result =
-                await HttpHelper.sendPostImageRequest(_base64Image, newPoints);
+                await HttpHelper.sendPostImageRequest(_base64Image!, newPoints);
             if (!mounted) return;
             setState(() {
               _isLoading = false;
@@ -91,7 +91,7 @@ class _AddEditableScreenState extends State<AddEditableScreen> {
   @override
   void dispose() {
     super.dispose();
-    _image.deleteSync();
+    _image?.deleteSync();
   }
 
   @override
@@ -115,7 +115,7 @@ class _AddEditableScreenState extends State<AddEditableScreen> {
                     const CircularProgressIndicator(),
                   ],
                 )
-              : FlatButton.icon(
+              : TextButton.icon(
                   icon: Icon(Icons.send),
                   label: const Text('Submit'),
                   onPressed: _base64Image == null ? null : _onSubmit,

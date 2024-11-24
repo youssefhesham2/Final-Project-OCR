@@ -7,10 +7,10 @@ class Settings with ChangeNotifier {
   final fontSizeFactorKey = 'fontSizeFactor';
   final fontSizeDefaultFactor = 1.1;
 
-  bool _allowSelectPoints;
-  bool _darkTheme;
-  double _fontSizeFactor;
-  SharedPreferences _prefs;
+  bool? _allowSelectPoints;
+  bool? _darkTheme;
+  double? _fontSizeFactor;
+  SharedPreferences? _prefs;
 
   Settings() {
     _allowSelectPoints = true;
@@ -19,18 +19,18 @@ class Settings with ChangeNotifier {
     loadFromPrefs();
   }
 
-  bool get allowSelectPoints => _allowSelectPoints;
-  double get fontSizeFactor => _fontSizeFactor;
-  bool get darkTheme => _darkTheme;
+  bool? get allowSelectPoints => _allowSelectPoints;
+  double? get fontSizeFactor => _fontSizeFactor;
+  bool? get darkTheme => _darkTheme;
 
   void toggleAllowSelectPoints() {
-    _allowSelectPoints = !_allowSelectPoints;
+    _allowSelectPoints = !_allowSelectPoints!;
     saveToPrefs();
     notifyListeners();
   }
 
   void toggleDarkTheme() {
-    _darkTheme = !_darkTheme;
+    _darkTheme = !_darkTheme!;
     saveToPrefs();
     notifyListeners();
   }
@@ -49,18 +49,18 @@ class Settings with ChangeNotifier {
 
   Future<void> loadFromPrefs() async {
     await initPrefs();
-    _allowSelectPoints = _prefs.getBool(allowSelectPointsKey) ?? true;
-    _darkTheme = _prefs.getBool(darkThemeKey) ?? false;
+    _allowSelectPoints = _prefs?.getBool(allowSelectPointsKey) ?? true;
+    _darkTheme = _prefs?.getBool(darkThemeKey) ?? false;
     _fontSizeFactor =
-        _prefs.getDouble(fontSizeFactorKey) ?? fontSizeDefaultFactor;
+        _prefs?.getDouble(fontSizeFactorKey) ?? fontSizeDefaultFactor;
     notifyListeners();
   }
 
   Future<void> saveToPrefs() async {
     await initPrefs();
-    _prefs.setBool(allowSelectPointsKey, _allowSelectPoints);
-    _prefs.setBool(darkThemeKey, _darkTheme);
-    _prefs.setDouble(fontSizeFactorKey, _fontSizeFactor);
+    _prefs?.setBool(allowSelectPointsKey, _allowSelectPoints!);
+    _prefs?.setBool(darkThemeKey, _darkTheme!);
+    _prefs?.setDouble(fontSizeFactorKey, _fontSizeFactor!);
   }
 }
 
@@ -69,7 +69,7 @@ class Themes {
       BuildContext context, bool isDarkTheme, double fontSizeFactor) {
     return ThemeData(
       primaryColor: isDarkTheme ? Colors.teal : Colors.indigo,
-      accentColor: Colors.deepOrange,
+      hintColor: Colors.deepOrange,
       cardColor: isDarkTheme ? Colors.grey[900] : Colors.white,
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
       buttonTheme: Theme.of(context).buttonTheme.copyWith(

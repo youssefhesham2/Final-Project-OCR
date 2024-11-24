@@ -8,7 +8,7 @@ Future<void> showErrorAlertDialog(BuildContext context) {
       content:
           new Text('An unexpected error has occurred. Please try again later.'),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text('OK'),
           onPressed: () {
             Navigator.of(context).pop();
